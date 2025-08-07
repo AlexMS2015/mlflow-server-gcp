@@ -57,4 +57,5 @@ jobs:
           --service-account ${{ env.SVC_EMAIL }} \
           --update-secrets=DB_URL=DB_URL:latest \
           --update-secrets=BUCKET_URL=BUCKET_URL:latest \
-          --memory=2Gi
+          --memory=2Gi \
+          --timeout=600
