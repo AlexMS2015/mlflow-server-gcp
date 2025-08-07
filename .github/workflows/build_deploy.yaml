@@ -52,9 +52,9 @@ jobs:
         run: |
           IMAGE_TAG=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:latest
           gcloud run deploy ${{ env.SERVICE_NAME }} \
-          --image ${IMAGE_TAG}
-          --region ${{ env.REGION }}
-          --service-account ${{ env.SVC_EMAIL }}
-          --update-secrets=DB_URL:latest
-          --update-secrets=BUCKET_URL:latest
+          --image ${IMAGE_TAG} \
+          --region ${{ env.REGION }} \
+          --service-account ${{ env.SVC_EMAIL }} \
+          --update-secrets=DB_URL:latest \
+          --update-secrets=BUCKET_URL:latest \
           --memory=2Gi
