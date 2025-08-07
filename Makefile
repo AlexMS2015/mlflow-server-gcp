@@ -59,11 +59,11 @@ create-secrets:
 	gcloud secrets create DB_URL --replication-policy="automatic"
 	gcloud secrets create BUCKET_URL --replication-policy="automatic"
 
-add-secrets:
-	echo -n "postgresql://<$(DB_USERNAME)>:<$(DB_PASSWORD)>@34.40.174.129/$(DATABASE_NAME)" | \
+add-secrets: create-secrets
+	printf "%s" "postgresql://<$(DB_USERNAME)>:<$(DB_PASSWORD)>@34.40.174.129/$(DATABASE_NAME)" | \
     	gcloud secrets versions add DB_URL --data-file=-
 
-	echo -n "gs://$(BUCKET_NAME)/$(FOLDER_NAME)" | \
+	printf "%s" "gs://$(BUCKET_NAME)/$(FOLDER_NAME)" | \
     	gcloud secrets versions add BUCKET_URL --data-file=-
 
 # service account and permissions
@@ -106,3 +106,9 @@ setup-gh-cli:
 # setup-gh-cli
 add-secrets-gh: 
 	gh secret set SVC_KEY < ~/.gcp/mlflow-svc-acct-key.json
+
+get-service-url:
+	gcloud run services describe $(SERVICE_NAME) \
+		--region=$(REGION) \
+		--project=$(PROJECT_ID) \
+		--format='value(status.url)'
