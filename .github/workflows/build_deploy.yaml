@@ -1,0 +1,55 @@
+name: "Build and deploy tracking server"
+
+on:
+  push:
+    branches:
+    - 'main'
+
+jobs:
+  build:
+    runs-on: 'ubuntu-latest'
+
+    steps:
+      - name: 'Checkout'
+        uses: 'actions/checkout@v4'
+
+      - name: 'Import env file'
+        run: cat .env >> ${GITHUB_ENV}
+
+      - name: 'Docker auth'
+        uses: 'docker/login-action@v3'
+        with:
+          username: _json_key
+          password: ${{ secrets.SVC_KEY }}
+          registry: '${{ env.REGION }}-docker.pkg.dev'
+
+      - name: Build image
+        run: docker buildx build -f ./Dockerfile --platform linux/amd64 -t ${{ env.IMAGE_NAME }} .
+
+      - name: Deploy image
+        run: |-
+          	IMAGE_TAG=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:latest
+            docker tag ${{ env.IMAGE_NAME }} ${{ env.IMAGE_TAG }}
+            docker push ${{ env.IMAGE_TAG }}
+
+  deploy:
+    runs-on: 'ubuntu-latest'
+
+    steps:
+      - name: 'Checkout'
+        uses: 'actions/checkout@v4'
+
+      - name: 'GCP authentication'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: ${{ secrets.SVC_KEY }}
+
+      - name: Deploy cloud run
+        run: |
+          	gcloud run deploy ${{ env.SERVICE_NAME }} \
+            --image ${{ env.IMAGE_TAG }}
+            --region ${{ env.REGION }}
+            --service-account ${{ env.SVC_EMAIL }}
+            --update-secrets=DB_URL:latest
+            --update-secrets=BUCKET_URL:latest
+            --memory=2Gi
