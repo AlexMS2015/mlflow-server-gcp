@@ -55,6 +55,6 @@ jobs:
           --image ${IMAGE_TAG} \
           --region ${{ env.REGION }} \
           --service-account ${{ env.SVC_EMAIL }} \
-          --update-secrets=DB_URL:latest \
-          --update-secrets=BUCKET_URL:latest \
+          --update-secrets=DB_URL=DB_URL:latest \
+          --update-secrets=DB_URL=BUCKET_URL:latest \
           --memory=2Gi
