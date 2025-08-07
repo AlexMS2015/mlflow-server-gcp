@@ -12,4 +12,4 @@ EXPOSE 8080
 
 RUN chmod +x server.sh
 
-ENTRYPOINT [ "./server.sh" ]
+ENTRYPOINT ["bash", "./server.sh"]
