@@ -28,9 +28,9 @@ jobs:
 
       - name: Deploy image
         run: |-
-          	IMAGE_TAG=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:latest
-            docker tag ${{ env.IMAGE_NAME }} ${{ env.IMAGE_TAG }}
-            docker push ${{ env.IMAGE_TAG }}
+          IMAGE_TAG=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:latest
+          docker tag ${{ env.IMAGE_NAME }} ${{ env.IMAGE_TAG }}
+          docker push ${{ env.IMAGE_TAG }}
 
   deploy:
     runs-on: 'ubuntu-latest'
@@ -46,10 +46,10 @@ jobs:
 
       - name: Deploy cloud run
         run: |
-          	gcloud run deploy ${{ env.SERVICE_NAME }} \
-            --image ${{ env.IMAGE_TAG }}
-            --region ${{ env.REGION }}
-            --service-account ${{ env.SVC_EMAIL }}
-            --update-secrets=DB_URL:latest
-            --update-secrets=BUCKET_URL:latest
-            --memory=2Gi
+          gcloud run deploy ${{ env.SERVICE_NAME }} \
+          --image ${{ env.IMAGE_TAG }}
+          --region ${{ env.REGION }}
+          --service-account ${{ env.SVC_EMAIL }}
+          --update-secrets=DB_URL:latest
+          --update-secrets=BUCKET_URL:latest
+          --memory=2Gi
