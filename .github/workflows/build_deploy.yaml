@@ -58,4 +58,5 @@ jobs:
             --update-secrets=DB_URL=DB_URL:latest \
             --update-secrets=BUCKET_URL=BUCKET_URL:latest \
             --memory=2Gi \
+            --allow-unauthenticated \
             --timeout=600
