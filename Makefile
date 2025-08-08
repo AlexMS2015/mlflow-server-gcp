@@ -113,13 +113,7 @@ get-service-url:
 		--project=$(PROJECT_ID) \
 		--format='value(status.url)'
 
-# IMAGE_TAG=$(REGION)-docker.pkg.dev/$(PROJECT_ID)/$(DOCKER_REPO)/$(IMAGE_NAME):latest
-# cloud-run-deploy:
-# 	gcloud run deploy $(SERVICE_NAME) \
-# 		--image $(IMAGE_TAG) \
-# 		--region $(REGION) \
-# 		--service-account $(SVC_EMAIL) \
-# 		--update-secrets=DB_URL=DB_URL:latest \
-# 		--update-secrets=BUCKET_URL=BUCKET_URL:latest \
-# 		--memory=2Gi \
-# 		--timeout=600
+run-proxy:
+	gcloud run services proxy $(SERVICE_NAME) \
+	--region=$(REGION) \
+	--port=8081
