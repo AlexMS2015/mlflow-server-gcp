@@ -60,7 +60,7 @@ create-secrets:
 	gcloud secrets create BUCKET_URL --replication-policy="automatic"
 
 add-secrets: create-secrets
-	printf "%s" "postgresql://<$(DB_USERNAME)>:<$(DB_PASSWORD)>@34.40.174.129/$(DATABASE_NAME)" | \
+	printf "%s" "postgresql://$(DB_USERNAME):$(DB_PASSWORD)@34.40.174.129/$(DATABASE_NAME)" | \
     	gcloud secrets versions add DB_URL --data-file=-
 
 	printf "%s" "gs://$(BUCKET_NAME)/$(FOLDER_NAME)" | \
@@ -112,3 +112,14 @@ get-service-url:
 		--region=$(REGION) \
 		--project=$(PROJECT_ID) \
 		--format='value(status.url)'
+
+# IMAGE_TAG=$(REGION)-docker.pkg.dev/$(PROJECT_ID)/$(DOCKER_REPO)/$(IMAGE_NAME):latest
+# cloud-run-deploy:
+# 	gcloud run deploy $(SERVICE_NAME) \
+# 		--image $(IMAGE_TAG) \
+# 		--region $(REGION) \
+# 		--service-account $(SVC_EMAIL) \
+# 		--update-secrets=DB_URL=DB_URL:latest \
+# 		--update-secrets=BUCKET_URL=BUCKET_URL:latest \
+# 		--memory=2Gi \
+# 		--timeout=600
